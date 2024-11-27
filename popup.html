@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Content Extractor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 10px;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    p {
+      font-size: 14px;
+      color: #555;
+    }
+    button {
+      padding: 8px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+    }
+    body {
+        width: 400px; /* Set the desired width */
+        height: auto; /* Let the height adjust to content */
+        margin: 0;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <img src="icon.png" alt="Extension Logo">
+  <h1>Extract Page Content</h1>
+  <p>Click the button below to extract the content of the current page and save it.</p>
+  <button id="extractButton">Extract Content</button>
+  <p id="status"></p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

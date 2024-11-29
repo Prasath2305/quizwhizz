@@ -13,10 +13,10 @@ document.getElementById("extractButton").addEventListener("click", () => {
             const statusElement = document.getElementById("status");
             if (response && response.status === "success") {
               statusElement.textContent = "Content saved successfully!";
-              statusElement.style.color = "green";
+              statusElement.style.color = "white";
             } else {
               statusElement.textContent = "Error saving content. Please try again.";
-              statusElement.style.color = "red";
+              statusElement.style.color = "white";
             }
           });
         } else {

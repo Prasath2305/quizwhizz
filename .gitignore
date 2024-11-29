@@ -1,1 +1,4 @@
 AI/creds.json
+AI/env/
+AI/__pycache__
+.gitignore

@@ -1,30 +1,53 @@
 document.getElementById("extractButton").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, { action: "extractContent" }, (response) => {
-      if (response && response.status === "success") {
-        const content = response.content;
+    const tab = tabs[0];
 
-        // Open a dialog box to ask for a name
-        const contentName = prompt("Enter a name to save the content:");
+    if (tab.url.includes("youtube.com/watch")) {
+      // Extract the YouTube video link
+      const videoLink = tab.url;
 
-        if (contentName) {
-          // Send the content and name to the background script for saving
-          chrome.runtime.sendMessage({ content, contentName }, (response) => {
-            const statusElement = document.getElementById("status");
-            if (response && response.status === "success") {
-              statusElement.textContent = "Content saved successfully!";
-              statusElement.style.color = "white";
-            } else {
-              statusElement.textContent = "Error saving content. Please try again.";
-              statusElement.style.color = "white";
-            }
-          });
-        } else {
-          alert("Content name is required to save.");
-        }
+      // Open a dialog box to ask for a name
+      const videoName = prompt("Enter a name to save the YouTube link:");
+
+      if (videoName) {
+        // Send the video link and name to the background script for saving
+        chrome.runtime.sendMessage({ videoLink, videoName, type: "youtube" }, (response) => {
+          const statusElement = document.getElementById("status");
+          if (response && response.status === "success") {
+            statusElement.textContent = "YouTube link saved successfully!";
+          } else {
+            statusElement.textContent = "Error saving YouTube link.";
+          }
+        });
       } else {
-        alert("Failed to extract content. Please try again.");
+        alert("Name is required to save the YouTube link.");
       }
-    });
+    } else {
+      // Extract page content
+      chrome.tabs.sendMessage(tab.id, { action: "extractContent" }, (response) => {
+        if (response && response.status === "success") {
+          const content = response.content;
+
+          // Open a dialog box to ask for a name
+          const contentName = prompt("Enter a name to save the page content:");
+
+          if (contentName) {
+            // Send the content and name to the background script for saving
+            chrome.runtime.sendMessage({ content, contentName, type: "page" }, (response) => {
+              const statusElement = document.getElementById("status");
+              if (response && response.status === "success") {
+                statusElement.textContent = "Page content saved successfully!";
+              } else {
+                statusElement.textContent = "Error saving page content.";
+              }
+            });
+          } else {
+            alert("Name is required to save the content.");
+          }
+        } else {
+          alert("Failed to extract content.");
+        }
+      });
+    }
   });
 });

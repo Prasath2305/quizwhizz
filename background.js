@@ -15,7 +15,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.content && message.contentName) {
+  if (message.type === "page" && message.content && message.contentName) {
     const contentRef = ref(database, `pageContents/${message.contentName}`);
     set(contentRef, { content: message.content })
       .then(() => sendResponse({ status: "success" }))
@@ -23,8 +23,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.error("Error saving content:", error);
         sendResponse({ status: "error" });
       });
-
-    // Return true to indicate asynchronous response
-    return true;
+  } else if (message.type === "youtube" && message.videoLink && message.videoName) {
+    const videoRef = ref(database, `youtubeLinks/${message.videoName}`);
+    set(videoRef, { link: message.videoLink })
+      .then(() => sendResponse({ status: "success" }))
+      .catch((error) => {
+        console.error("Error saving video link:", error);
+        sendResponse({ status: "error" });
+      });
   }
+
+  // Indicate asynchronous response
+  return true;
 });

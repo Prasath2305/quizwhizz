@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Content</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <div class="flex items-center justify-center h-screen">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-center">Select Content to Process</h2>
+
+            <!-- List of available content -->
+            <form action="/process_content" method="POST">
+                <div class="space-y-4">
+                    {% for content in content_list %}
+                    <div class="flex items-center">
+                        <input type="radio" id="{{ content }}" name="content" value="{{ content }}" class="mr-2">
+                        <label for="{{ content }}" class="text-lg">{{ content }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Process Content</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

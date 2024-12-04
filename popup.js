@@ -26,7 +26,18 @@ document.getElementById("extractButton").addEventListener("click", () => {
       // Extract page content
       chrome.tabs.sendMessage(tab.id, { action: "extractContent" }, (response) => {
         if (response && response.status === "success") {
-          const content = response.content;
+          let content = response.content;
+
+          // Remove all HTML tags and CSS content
+          const div = document.createElement("div");
+          div.innerHTML = content; // Assuming the content is raw HTML
+
+          // Remove all <style> tags and their content
+          const styleElements = div.querySelectorAll("style");
+          styleElements.forEach((style) => style.remove());
+
+          // Extract only the plain text
+          content = div.textContent || div.innerText || "";
 
           // Open a dialog box to ask for a name
           const contentName = prompt("Enter a name to save the page content:");

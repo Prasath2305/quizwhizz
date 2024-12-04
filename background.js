@@ -24,7 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ status: "error" });
       });
   } else if (message.type === "youtube" && message.videoLink && message.videoName) {
-    const videoRef = ref(database, `youtubeLinks/${message.videoName}`);
+    const videoRef = ref(database, `youtubeLink/${message.videoName}`);
     set(videoRef, { link: message.videoLink })
       .then(() => sendResponse({ status: "success" }))
       .catch((error) => {

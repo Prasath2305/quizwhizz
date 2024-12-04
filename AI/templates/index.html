@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ chatbot_name }}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- Full screen container for the page -->
+    <div class="flex items-center justify-center h-screen">
+        <!-- Chat Container Box -->
+        <div class="flex flex-col w-full max-w-4xl h-full bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <!-- Chat Header -->
+            <div class="flex justify-center items-center p-4 bg-gray-900 shadow-md">
+                <div class="text-3xl font-semibold text-center text-white">Chat with {{ chatbot_name }}</div>
+            </div>
+
+            <!-- Chat Content -->
+            <div id="chatbox-content" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-800">
+                <!-- User and bot messages will appear here -->
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="p-4 bg-gray-900 border-t border-gray-700">
+                <input type="text" id="user-message" placeholder="Type a message..." class="w-full p-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="sendMessage()" class="mt-2 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Send message function
+        function sendMessage() {
+            let message = document.getElementById("user-message").value;
+            if (message.trim() === "") return;
+
+            let chatContent = document.getElementById("chatbox-content");
+
+            // Display user message
+            chatContent.innerHTML += "<div class='text-right bg-blue-600 p-2 rounded-lg'>" + message + "</div>";
+            document.getElementById("user-message").value = "";  // Clear input box
+
+            // Send message to Flask API
+            fetch('/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'message=' + encodeURIComponent(message)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display bot response
+                chatContent.innerHTML += "<div class='text-left bg-gray-600 p-2 rounded-lg'>" + data.response + "</div>";
+                chatContent.scrollTop = chatContent.scrollHeight;  // Scroll to the bottom
+            });
+        }
+
+        // Optional: Auto-focus the input field when the page is loaded
+        window.onload = () => {
+            document.getElementById("user-message").focus();
+        }
+    </script>
+</body>
+</html>
